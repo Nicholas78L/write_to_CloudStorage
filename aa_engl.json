@@ -1,0 +1,20 @@
+[
+  {
+  "name" : "Folder with format A 4",
+  "price" : 79,
+  "sum1" : 15800,
+  "quantity" : "200"
+},
+{
+"name" : "Folder-case with ties",
+"price" : 6.7,
+"sum1" : 1340,
+"quantity" : "200"
+},
+{
+"name" : "Hole maker",
+"price" : 6.4,
+"sum1" : 768,
+"quantity" : "120"
+}
+]
