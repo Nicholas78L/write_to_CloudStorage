@@ -7,7 +7,7 @@ from google.cloud import storage
 
 SERVICE_ACCOUNT_JSON = '/Users/a1/Desktop/gsbq-key.json'   # path to key
 
-def write_from_source_local_file_to_destination_local_file(source_file, destination_file):
+def convert_JSON_to_NDJSON(source_file, destination_file):
     with open(source_file, "r") as read_file:
         data = json.load(read_file)
     result = [json.dumps(record) for record in data]
@@ -32,7 +32,7 @@ def gcs_to_bq():
     client = bigquery.Client.from_service_account_json(SERVICE_ACCOUNT_JSON)
     # TODO(developer): Set table_id to the ID of the table to create.
     # # # table_id = 'your_project_id.your_dataset-id.your_table_name'.
-    table_id = "gsbq-341910.cs_dataset_id.cs_bg_table"
+    table_id = "gsbq-341910.cs_dataset_id.cs_bq_table_eng"
     job_config = bigquery.LoadJobConfig(
         schema=[
             bigquery.SchemaField("name", "STRING"),     # # # Поля Схемы должны соответствовать полям таблицы dataset в Google Cloud Storage
@@ -42,7 +42,7 @@ def gcs_to_bq():
         ],
         source_format=bigquery.SourceFormat.NEWLINE_DELIMITED_JSON,
     )
-    uri = 'gs://wrjsontogcsbq/write_to_gc_bq/result_file.json'
+    uri = 'gs://wrjsontogcsbq/write_to_gc_bq/result_file_eng.json'
     load_job = client.load_table_from_uri(
         uri,
         table_id,
@@ -55,12 +55,12 @@ def gcs_to_bq():
 
             # # # Все функции вызывать последовательно, по одной (остальные закоменчивать).
 if __name__ == '__main__':
-            # # # write_from...() эта ф-ция позволяет переформатировать JSON-й файл в ND-JSON файл (newline delimited JSON file) для распознания его таблицами BigQuery.
-    write_from_source_local_file_to_destination_local_file("aa_engl.json", 'nd-proceesed.json')  ## (откуда:файл-исходник, куда:будущий-файл-адресат)
-            # # #  os.system( copy /путь к исходнику данных    /куда положить в PyCharm и как назвать файл ) ф-ция копирует файл целиком.
-    # os.system('cp /Users/a1/PycharmProjects/write_to_CloudStorage/nd-proceesed.json /Users/a1/PycharmProjects/write_to_CloudStorage/temp/local_file.json')
+            # # # НЕОБЯЗАТЕЛЬНАЯ функция, которая копирует файл целиком из локального диска в данный проект в PyCharm idea
+            # # # (раньше забирал с рабочего стола, перенёс в папку temp, чтобы не засорять раб.стол).
+            # # #  os.system( copy /путь к исходнику данных    /куда положить в PyCharm и как назвать файл )
+    os.system('cp temp/aa_eng.json source_json_files/aa_eng.json')
+            # # # Эта ф-ция позволяет переформатировать JSON-й файл в ND-JSON файл (newline delimited JSON file) для распознания его таблицами BigQuery.
+    # convert_JSON_to_NDJSON('source_json_files/aa_eng.json', 'reformated_to_nd_json_files/nd-json_eng.json')  ## (откуда:файл-исходник, куда:будущий локальный-файл-адресат)
             # # #  upload_to_bucket(в какой dataset сохранить данные и как назвать файл (таблицу), откуда исходник, имя_баккета) ф-ция закачивает файл в bucket.
-    # upload_to_bucket('write_to_gc_bq/result_file.json', 'temp/local_file.json', 'wrjsontogcsbq')
+    # upload_to_bucket('write_to_gc_bq/result_file_eng.json', 'reformated_to_nd_json_files/nd-json_eng.json', 'wrjsontogcsbq')
     # gcs_to_bq()
-
-

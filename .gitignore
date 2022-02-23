@@ -1,3 +1,5 @@
 .idea
 venv/
 temp/
+reformated_to_nd_json_files/
+source_json_files/

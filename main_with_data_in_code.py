@@ -14,10 +14,8 @@ def write_in_local_file(file_name, data):
 # (как будет называться файл и путь к нему в бакете, путь исходного файла который хотим сохранить, бакет нэйм)
 def upload_to_bucket(blob_name, path_to_file, bucket_name):
     """ Upload data to a bucket"""
-    # Explicitly use service account credentials by specifying the private key
-    # file.
+    # Explicitly use service account credentials by specifying the private key file.
     storage_client = storage.Client.from_service_account_json(SERVICE_ACCOUNT_JSON)
-    #print(buckets = list(storage_client.list_buckets())
     bucket = storage_client.get_bucket(bucket_name)
     blob = bucket.blob(blob_name)
     blob.upload_from_filename(path_to_file)
@@ -41,7 +39,7 @@ def gcs_to_bq():
         ],
         source_format=bigquery.SourceFormat.NEWLINE_DELIMITED_JSON,
     )
-    uri = 'gs://wr_short_bucket/write_to_gc_bq/result_file_1.json'
+    uri = 'gs://wr_short_bucket/write_to_gc_bq/result_file_with_data_in_code.json'
     load_job = client.load_table_from_uri(
         uri,
         table_id,
@@ -52,6 +50,7 @@ def gcs_to_bq():
     destination_table = client.get_table(table_id)
     print("Loaded {} rows.".format(destination_table.num_rows))
 
+            # # # Все функции вызывать последовательно, по одной (остальные закоменчивать).
 if __name__ == '__main__':
     data = {
       "c_compiler_version": "10",
@@ -60,9 +59,9 @@ if __name__ == '__main__':
       "CONDA_BUILD_SYSROOT": "/opt/MacOSX10.10.sdk",
       "target_platform": "osx-64"
     }
-    # write_in_local_file('temp/local_file_1.json', data)
-    #                (куда сохранить данные и как назвать файл, откуда исходник, имя_баккета)
-    # upload_to_bucket('write_to_gc_bq/result_file_1.json', 'temp/local_file_1.json', 'wr_short_bucket')
+            # # #  (куда сохранить данные и как назвать файл, имя переменной с данными)
+    # write_in_local_file('source_json_files/local_file_with_data_in_code.json', data)
+            # # #          (куда сохранить данные и как назвать файл,        откуда исходник,          имя_баккета)
+    # upload_to_bucket('write_to_gc_bq/result_file_with_data_in_code.json', 'source_json_files/local_file_with_data_in_code.json', 'wr_short_bucket')
     gcs_to_bq()
-
 
